@@ -2,11 +2,24 @@
 
 import dotenv from "dotenv"; // remember every time we have to execute the env file first so all the app can acces it 
 import connectDB from "./db/index.js";
+import { app } from "./app.js";
 dotenv.config({
   path: "./env",
 });
 
-connectDB();
+connectDB()
+.then(()=>{
+    app.on("error" , (err)=>{
+        console.log("Error durign listing the app" , err);
+        throw err;
+    })
+    app.listen(process.env.PORT || 8000,()=>{
+        console.log(`The server is running on PORT : ${process.env.PORT}`);
+    })
+})
+.catch((err)=>{
+    console.log("MongoDb connection failed" , err);
+})
 
 
 // import mongoose from "mongoose";
